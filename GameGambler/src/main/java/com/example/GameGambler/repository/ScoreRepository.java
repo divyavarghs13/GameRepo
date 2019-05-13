@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import com.example.GameGambler.model.ScoreDetails;
 
+/**
+ * custom interface for fetching scoredetails by userid
+*/
 @Repository
 public interface ScoreRepository extends CrudRepository<ScoreDetails, Long>{
 

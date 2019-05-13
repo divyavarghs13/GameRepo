@@ -12,10 +12,18 @@ import com.example.GameGambler.service.PlayService;
 @Service
 public class PlayServiceImpl implements PlayService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	/**Generating a random number between 1 and 100.
+	 * If this number is below 30, status is WIN
+	 * If this number is between 30 and 40, status is BONUS
+	 * If this number is between 40 and 60, status is WIN & BONUS. Let's assume.
+	 * If this number is above 60, status is LOSS
+	 */
 	@Override
 	public String fetchBetChance(String winPercentage, String bonusPercentage, String winBonusPercentage)
 			throws Exception {
 		try {
+
 			Random rn = new Random();
 			int chance = rn.nextInt(100) + 1;
 			logger.info(String.valueOf(chance));
@@ -32,6 +40,13 @@ public class PlayServiceImpl implements PlayService {
 		}
 		
 	}
+	
+	/**
+	 * calculating the Score according to his game
+	 * if he is winning the game, the coins will be doubled
+	 * no extra coins for bonus, but you can play again
+	 * no coins for loss
+	 */
 	
 	public int fetchScore(int numOfCoins,String chance)
 			throws Exception {

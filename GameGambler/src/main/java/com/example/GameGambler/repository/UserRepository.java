@@ -7,7 +7,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.example.GameGambler.model.User;
-
+/**
+ * custom interface for fetching user details by username and password
+ * @author Divya
+ *
+ */
 @Repository
 public interface UserRepository extends CrudRepository<User, Long>{
 

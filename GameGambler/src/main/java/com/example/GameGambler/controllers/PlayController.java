@@ -53,6 +53,9 @@ public class PlayController {
 			score.setScore(earnedScore);
 			score.setUserid(id);
 			score.setTimeofplay(new Timestamp(System.currentTimeMillis()));
+			/**
+			 * inserting the score to the database according to the userid
+			 */
 			taskDAOImpl.insertScoredetails(score);
 			modelMap.put("chance", chance);
 			modelMap.put("earnedScore", earnedScore);

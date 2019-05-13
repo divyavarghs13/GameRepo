@@ -62,6 +62,9 @@ public class WelcomeController {
 		user.setLast_name(last_name);
 		user.setUsername(username);
 		user.setPassword(password);
+		/**
+		 * Insert User details to db
+		 */
 		taskDAOImpl.insertUser(user);
 		return "reg_success";
 
@@ -70,13 +73,17 @@ public class WelcomeController {
 	@PostMapping("/findUser")
 	public String authenticate(@RequestParam("username") String username,
 			@RequestParam("password") String password, ModelMap modelMap) {		
-		
+		/**
+		 * authenticate user by checking username and password
+		 */
 		List<User> userList=taskDAOImpl.findUser(username, password);	
-		if(userList!=null && userList.size()>0)
+		if(userList!=null && userList.size()>0) {
 			user=userList.get(0);
 		String name=user.getFirst_name()+" "+user.getLast_name();
-		int id=user.getUserid();
-		
+		int id=user.getUserid();		
+		/**
+		 * retrieving the previous winning history by userid from database
+		 */
 		List<ScoreDetails> scoreList=taskDAOImpl.fetchScoreDetailsOfUser(id);
 		
 		List<String> scores=new ArrayList<String>();
@@ -93,7 +100,11 @@ public class WelcomeController {
 		modelMap.put("name", name);
 		modelMap.put("scorelist", scores);
 		modelMap.put("playlist", timeOfPlay);
-		
+		return "play";
+		}
+		else {
+			return "error";
+		}
 		/**		 		
 		if (userList != null && userList.size() > 0)
 			user = userList.get(0);
@@ -106,8 +117,8 @@ public class WelcomeController {
 		
 		modelMap.put("ScoreDetails",list);
 		modelMap.put("id", id);
-		modelMap.put("name", name);**/
-		return "play";
+		modelMap.put("name", name);
+		return "play";**/
 
 	}
 }
