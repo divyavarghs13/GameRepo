@@ -26,15 +26,15 @@ public class PlayServiceImpl implements PlayService {
 
 			Random rn = new Random();
 			int chance = rn.nextInt(100) + 1;
-			logger.info(String.valueOf(chance));
-			if(chance <= Integer.parseInt(winPercentage))
-				return Constant.WIN_STATUS;
+			if(chance <= Integer.parseInt(winPercentage)) {				
+				return "WIN";
+			}
 			else if(chance <= (Integer.parseInt(winPercentage)+Integer.parseInt(bonusPercentage)))
-				return Constant.BONUS_STATUS;
+				return "BONUS_STATUS";
 			else if(chance <= (Integer.parseInt(winPercentage)+Integer.parseInt(bonusPercentage)+Integer.parseInt(winBonusPercentage)))
-				return Constant.WIN_BONUS_STATUS;
+				return "WIN_BONUS_STATUS";
 			else
-				return Constant.LOSS;						
+				return "LOSS";						
 		} catch (Exception e) {
 			throw e;
 		}
@@ -49,8 +49,7 @@ public class PlayServiceImpl implements PlayService {
 	 */
 	
 	public int fetchScore(int numOfCoins,String chance)
-			throws Exception {
-		 
+			throws Exception {		 
 		try {			
 			if(chance.equalsIgnoreCase("WIN"))
 				return (numOfCoins*2);

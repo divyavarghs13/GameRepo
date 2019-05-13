@@ -6,14 +6,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Game Login Form</title>
+<title>Game Form</title>
 </head>
 <body>
 <form action="/bet/checkStatus" method="get">
 
 	
 			<table style="with: 50%">
-				<tr><td align="center"><input type="submit" value="CheckTheStatus" /></td>
+			<tr><td><input type="hidden" name="id" value="${id}" /></td></tr>			
+			<tr><td><input type="hidden" name="numOfCoins" value="${numOfCoins}" /></td></tr>
+				<tr><td align="center"><input type="submit" value="CheckForStatus" /></td>
 				</tr>
 				
 			</table>

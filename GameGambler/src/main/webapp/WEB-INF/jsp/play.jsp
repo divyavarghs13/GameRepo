@@ -21,9 +21,8 @@
 				<input type="hidden" name="id" value="${id}" />
 			</tr>
 			<tr>
-				<td>Number of coins you want to spend</td>
-				<td><input type="text" name="numOfCoins" required="true"
-					min="1" /></td>
+				<td>You can pay</td>
+				<td><input type="text" name="numOfCoins" min="10" required="true" value="10" /></td>
 			</tr>
 			<tr>
 				<td>Your Score:</td>

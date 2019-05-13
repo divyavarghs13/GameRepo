@@ -80,6 +80,7 @@ public class WelcomeController {
 		if(userList!=null && userList.size()>0) {
 			user=userList.get(0);
 		String name=user.getFirst_name()+" "+user.getLast_name();
+		logger.info("User="+name);
 		int id=user.getUserid();		
 		/**
 		 * retrieving the previous winning history by userid from database
