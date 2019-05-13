@@ -1,5 +1,7 @@
 package com.example.GameGambler.controllers;
 
+import java.sql.Timestamp;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.GameGambler.common.Constant;
-import com.example.GameGambler.dao.TaskDAO;
+import com.example.GameGambler.model.ScoreDetails;
 import com.example.GameGambler.service.PlayService;
+import com.example.GameGambler.serviceImpl.TaskDAOImpl;
 
 
 @Controller
@@ -28,8 +31,8 @@ public class PlayController {
 	private PlayService abcService;
 	
 	@Autowired
-	TaskDAO taskDAOImpl;
-
+	TaskDAOImpl taskDAOImpl;
+	
 	@Value("${winPercentage}")
 	private String winPercentage;
 	
@@ -38,22 +41,40 @@ public class PlayController {
 	
 	@Value("${winBonusPercentage}")
 	private String winBonusPercentage;
-		
+	
+	ScoreDetails score=new ScoreDetails();
+	
 	@PostMapping("/play")
-	public String playGame(@RequestParam("numOfCoins") String numOfCoins,@RequestParam("id") String id, ModelMap modelMap){
+	public String playGame(@RequestParam("numOfCoins") String numOfCoins,@RequestParam("id") int id, ModelMap modelMap){
 		try {
 			//System.out.println("ID="+id);
 			String chance=abcService.fetchBetChance(winPercentage, bonusPercentage, winBonusPercentage);
 			int earnedScore=abcService.fetchScore(Integer.parseInt(numOfCoins), chance);
-			taskDAOImpl.insertScoredetails(id, earnedScore);
+			score.setScore(earnedScore);
+			score.setUserid(id);
+			score.setTimeofplay(new Timestamp(System.currentTimeMillis()));
+			taskDAOImpl.insertScoredetails(score);
 			modelMap.put("chance", chance);
 			modelMap.put("earnedScore", earnedScore);
 			logger.info(chance);
 			logger.info(String.valueOf(earnedScore));
 			return "result";
 		} 
+		
 		catch(Exception e) {
 			return null;
+		}
+				
+	}
+	@RequestMapping(value = "/bet/checkStatus", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody	
+	public ResponseEntity<Object> testSegmentXML(){
+		try {
+			String chance=abcService.fetchBetChance(winPercentage, bonusPercentage, winBonusPercentage);
+			//logger.info(chance);
+			return new ResponseEntity<Object>(chance, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(Constant.UNEXPECTED_ERROR, HttpStatus.OK);
 		}
 				
 	}

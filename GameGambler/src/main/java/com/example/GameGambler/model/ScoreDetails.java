@@ -1,56 +1,55 @@
 package com.example.GameGambler.model;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Component
-public class ScoreDetails  implements Serializable{
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	int userid;
-    int score;
-	Timestamp playtime;
+@Entity
+@Table(name="scoredetails")
+public class ScoreDetails {
 	
-	public int getUserid() {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer scoreid;
+	
+	@Column(name = "userid")
+	private Integer userid;
+	
+	@Column(name = "score")
+	private Integer score;
+	
+	@Column(name = "timeofplay")
+	private Timestamp timeofplay;
+
+	public Integer getUserid() {
 		return userid;
 	}
-	@Override
-	public String toString() {
-		return "ScoreDetails [userid=" + userid + ", score=" + score + ", playtime=" + playtime + "]";
-	}
-	public void setUserid(int userid) {
+
+	public void setUserid(Integer userid) {
 		this.userid = userid;
 	}
-	public int getScore() {
+
+	public Integer getScore() {
 		return score;
 	}
-	public void setScore(int score) {
+
+	public void setScore(Integer score) {
 		this.score = score;
 	}
-	public Timestamp getCurrentTime()
-    {      
-		java.sql.Timestamp t = null;
-       try{             	
-    	   t=new Timestamp(System.currentTimeMillis());
-    	   //System.out.println("formatted Time="+t);
-       }
-       catch(Exception e){ 
-        e.printStackTrace(); 
-       }
-       return t; 
-   }
-	public Timestamp getPlaytime() {
-		return playtime;
+
+	public Timestamp getTimeofplay() {
+		return timeofplay;
 	}
 
-	public void setPlaytime(Timestamp playtime) {
-		this.playtime = getCurrentTime();
+	public void setTimeofplay(Timestamp timeofplay) {
+		this.timeofplay = new Timestamp(System.currentTimeMillis());
 	}
+
 	
-    
+	
 }

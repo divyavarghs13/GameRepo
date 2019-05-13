@@ -3,28 +3,24 @@
  */
 package com.example.GameGambler.controllers;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.example.GameGambler.dao.TaskDAOImpl;
 import com.example.GameGambler.model.ScoreDetails;
-import com.example.GameGambler.dao.TaskDAO;
-import com.example.GameGambler.controllers.PlayController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.GameGambler.model.User;
+import com.example.GameGambler.repository.UserRepository;
+import com.example.GameGambler.serviceImpl.TaskDAOImpl;
 /**
  * @author Divya
  *
@@ -33,12 +29,14 @@ import org.slf4j.LoggerFactory;
 public class WelcomeController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private UserRepository userRepo;
 	
 	@Autowired
-	TaskDAO taskDAOImpl;
+	TaskDAOImpl taskDAOImpl;
 	
-	@Autowired
-	PlayController playcontroller;
+	User user=new User();
+	ScoreDetails scoredetails=new ScoreDetails();
 	
 	@RequestMapping(value = "/welcome")
 	String showLoginPage(ModelMap model) {
@@ -58,28 +56,57 @@ public class WelcomeController {
 	public String saveDetails(@RequestParam("first_name") String first_name,
 			@RequestParam("last_name") String last_name, @RequestParam("username") String username,
 			@RequestParam("password") String password, ModelMap modelMap) {
-
-		taskDAOImpl.insertUser(first_name, last_name, username, password);
+		
+		
+		user.setFirst_name(first_name);
+		user.setLast_name(last_name);
+		user.setUsername(username);
+		user.setPassword(password);
+		taskDAOImpl.insertUser(user);
 		return "reg_success";
 
 	}
+	
 	@PostMapping("/findUser")
 	public String authenticate(@RequestParam("username") String username,
-			@RequestParam("password") String password, ModelMap modelMap) {
-
-		List<String> user=taskDAOImpl.findUser(username, password);	
+			@RequestParam("password") String password, ModelMap modelMap) {		
+		
+		List<User> userList=taskDAOImpl.findUser(username, password);	
+		if(userList!=null && userList.size()>0)
+			user=userList.get(0);
+		String name=user.getFirst_name()+" "+user.getLast_name();
+		int id=user.getUserid();
+		
+		List<ScoreDetails> scoreList=taskDAOImpl.fetchScoreDetailsOfUser(id);
+		
+		List<String> scores=new ArrayList<String>();
+		List<String> timeOfPlay=new ArrayList<String>();
+		if(scoreList!=null && scoreList.size()>0)	{
+			for (ScoreDetails list : scoreList) {
+				if(list.getScore() > 0) {
+				scores.add(list.getScore().toString());
+				timeOfPlay.add(list.getTimeofplay().toString());
+				}
+			}
+		}
+		modelMap.put("id", id);
+		modelMap.put("name", name);
+		modelMap.put("scorelist", scores);
+		modelMap.put("playlist", timeOfPlay);
+		
+		/**		 		
+		if (userList != null && userList.size() > 0)
+			user = userList.get(0);
+			
+		modelMap.put("id", id);
+		modelMap.put("name", user);
+		
 		String id=user.get(0).toString();
 		String name=user.get(1).toString();
 		
-		/**Added for history **/
-		
-		ScoreDetails sd=taskDAOImpl.getScoredetails(Integer.parseInt(id));	
-		List<ScoreDetails> list=new ArrayList();		
-		list.add(sd);
-		System.out.println(sd);
 		modelMap.put("ScoreDetails",list);
 		modelMap.put("id", id);
-		modelMap.put("name", name);
+		modelMap.put("name", name);**/
 		return "play";
 
 	}

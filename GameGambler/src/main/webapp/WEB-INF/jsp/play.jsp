@@ -25,22 +25,25 @@
 				<td><input type="text" name="numOfCoins" required="true"
 					min="1" /></td>
 			</tr>
-			<!-- <tr>
-				<td>Your last Score:</td>
+			<tr>
+				<td>Your Score:</td>
 				<td>
 					<table style="with: 50%" border="1">
 						<tr>
 							<td>Score</td>
-							<td>TimeOfPlay</td>
+						<c:forEach items="${scorelist}" var="item">		
+								<td><c:out value="${item}" /></td>
+						</c:forEach>
 						</tr>
 						<tr>
-							<c:forEach items="${ScoreDetails}" var="item">
-								<td><c:out value="${item}" /></td>
-							</c:forEach>
+							<td>TimeOfPlay</td>
+						<c:forEach items="${playlist}" var="time">								
+								<td><c:out value="${time}" /></td>
+						</c:forEach> 
 						</tr>
 					</table>
 				</td>
-			</tr> -->
+			</tr>
 			<tr>
 				<td align="center"><input type="submit" value="Play" /></td>
 			</tr>
