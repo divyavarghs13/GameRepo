@@ -45,21 +45,38 @@ public class TaskDAOImpl {
 	@Autowired
 	private ScoreRepository scoreRepo;
 
-	public void insertUser(User user) {
+	public boolean insertUser(User user) {
+		boolean insert=false;
+		String username=user.getUsername().toString();
 		try {
-			userRepo.save(user);
+			
+			/** check whether username is already existing in db **/
+			List<User>existingList=userRepo.isExistsUserName(username);
+			if(existingList!=null){
+				logger.info("Username already exists!!");
+				insert=false;
+			}
+			else {
+				userRepo.save(user);
+				insert= true;
+			}
 		} catch (Exception ex) {
 			logger.info(" error while inserting user {}", ex.getMessage());
 		}
+		return insert;
 	}
 	
 	public List<User> findUser(String username, String password) {
 		List<User> userList = new ArrayList<User>();
 		try {
+			
 			userList = userRepo.findByUserNameAndPassword(username, password);	
+			if(userList.isEmpty()){
+				logger.info("Username and Password didn't match!!");
+			}
 
 		} catch (Exception ex) {
-			logger.info(" error while inserting transaction {}", ex.getMessage());
+			logger.info(" error while retrieving User {}", ex.getMessage());
 		}
 		return userList;
 	}
@@ -68,7 +85,7 @@ public class TaskDAOImpl {
 		try {
 			scoreRepo.save(score);
 		} catch (Exception ex) {
-			logger.info(" error while inserting user {}", ex.getMessage());
+			logger.info(" error while inserting Scoredetails {}", ex.getMessage());
 		}
 	}
 	
@@ -78,7 +95,7 @@ public class TaskDAOImpl {
 			 scoreList=scoreRepo.findByScoreDetailsOfUser(userid);
 
 		} catch (Exception ex) {
-			logger.info(" error while inserting transaction {}", ex.getMessage());
+			logger.info(" error while retrieving Scoredetails {}", ex.getMessage());
 		}
 		return scoreList;
 	}

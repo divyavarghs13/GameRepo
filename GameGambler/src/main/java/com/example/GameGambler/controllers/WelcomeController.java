@@ -65,9 +65,14 @@ public class WelcomeController {
 		/**
 		 * Insert User details to db
 		 */
-		taskDAOImpl.insertUser(user);
-		return "reg_success";
-
+		if(taskDAOImpl.insertUser(user)) {
+			return "reg_success";
+		}
+		else {
+			String message="Registration Failed, Username already exists!!";
+			modelMap.put("message",message);
+			return "error";
+		}
 	}
 	
 	@PostMapping("/findUser")
@@ -80,7 +85,7 @@ public class WelcomeController {
 		if(userList!=null && userList.size()>0) {
 			user=userList.get(0);
 		String name=user.getFirst_name()+" "+user.getLast_name();
-		logger.info("User="+name);
+		logger.info("User ="+name);
 		int id=user.getUserid();		
 		/**
 		 * retrieving the previous winning history by userid from database
@@ -104,6 +109,9 @@ public class WelcomeController {
 		return "play";
 		}
 		else {
+
+			String message="Login Failed, Username and Password didn't match!!";
+			modelMap.put("message",message);
 			return "error";
 		}
 		/**		 		
